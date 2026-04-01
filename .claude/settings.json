@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(brew install:*)",
+      "Bash(lsof -ti:5135)",
+      "Bash(xargs kill:*)"
+    ],
+    "additionalDirectories": [
+      "/usr/local/bin"
+    ]
+  }
+}

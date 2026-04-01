@@ -1,0 +1,45 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4">Create Account</h3>
+
+          @if (error) {
+            <div class="alert alert-danger">{{ error }}</div>
+          }
+
+          <form (ngSubmit)="register()" #regForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" [(ngModel)]="model.fullName"
+                     name="fullName" required placeholder="John Doe">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="model.email"
+                     name="email" required email placeholder="you@example.com">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" [(ngModel)]="model.phone"
+                     name="phone" required placeholder="+1 234 567 890">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" [(ngModel)]="model.password"
+                     name="password" required minlength="6" placeholder="At least 6 characters">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 btn-lg" [disabled]="regForm.invalid || loading">
+              {{ loading ? 'Creating account...' : 'Register' }}
+            </button>
+          </form>
+
+          <p class="text-center mt-3 text-muted">
+            Already have an account? <a routerLink="/login">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

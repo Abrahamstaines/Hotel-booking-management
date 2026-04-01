@@ -1,0 +1,35 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4">Welcome Back</h3>
+
+          @if (error) {
+            <div class="alert alert-danger">{{ error }}</div>
+          }
+
+          <form (ngSubmit)="login()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="model.email"
+                     name="email" required email placeholder="you@example.com">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" [(ngModel)]="model.password"
+                     name="password" required minlength="6" placeholder="Your password">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 btn-lg" [disabled]="loginForm.invalid || loading">
+              {{ loading ? 'Logging in...' : 'Login' }}
+            </button>
+          </form>
+
+          <p class="text-center mt-3 text-muted">
+            Don't have an account? <a routerLink="/register">Register here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

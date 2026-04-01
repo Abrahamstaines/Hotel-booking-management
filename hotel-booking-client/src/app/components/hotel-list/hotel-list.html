@@ -1,0 +1,104 @@
+<div class="container py-4">
+  <h2 class="mb-4">Find Hotels</h2>
+
+  <!-- Search Filters -->
+  <div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+      <form (ngSubmit)="applyFilters()" class="row g-3 align-items-end">
+        <div class="col-md-2">
+          <label class="form-label">City</label>
+          <input type="text" class="form-control" [(ngModel)]="searchParams.city"
+                 name="city" placeholder="Any city">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Check-in</label>
+          <input type="date" class="form-control" [(ngModel)]="searchParams.checkIn" name="checkIn">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Check-out</label>
+          <input type="date" class="form-control" [(ngModel)]="searchParams.checkOut" name="checkOut">
+        </div>
+        <div class="col-md-1">
+          <label class="form-label">Min $</label>
+          <input type="number" class="form-control" [(ngModel)]="searchParams.minPrice" name="minPrice" min="0">
+        </div>
+        <div class="col-md-1">
+          <label class="form-label">Max $</label>
+          <input type="number" class="form-control" [(ngModel)]="searchParams.maxPrice" name="maxPrice" min="0">
+        </div>
+        <div class="col-md-1">
+          <label class="form-label">Stars</label>
+          <select class="form-select" [(ngModel)]="searchParams.starRating" name="starRating">
+            <option [ngValue]="undefined">Any</option>
+            <option [ngValue]="3">3+</option>
+            <option [ngValue]="4">4+</option>
+            <option [ngValue]="5">5</option>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <label class="form-label">Guests</label>
+          <input type="number" class="form-control" [(ngModel)]="searchParams.guests" name="guests" min="1" max="10">
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search me-1"></i> Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  <!-- Results -->
+  @if (!loading && hotels.length === 0) {
+    <div class="text-center py-5">
+      <i class="bi bi-search fs-1 text-muted"></i>
+      <p class="text-muted mt-3">No hotels found. Try adjusting your search filters.</p>
+    </div>
+  }
+
+  <div class="row g-4">
+    @for (hotel of hotels; track hotel.id) {
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hotel-card">
+          <div class="card-img-top hotel-img-placeholder">
+            <i class="bi bi-building fs-1"></i>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title mb-0">{{ hotel.name }}</h5>
+              <span class="badge bg-warning text-dark">
+                @for (s of getStars(hotel.starRating); track $index) {
+                  <i class="bi bi-star-fill"></i>
+                }
+              </span>
+            </div>
+            <p class="text-muted mb-2">
+              <i class="bi bi-geo-alt me-1"></i>{{ hotel.city }}
+            </p>
+            <div class="mb-3">
+              @for (amenity of hotel.amenities; track amenity) {
+                <span class="badge bg-light text-dark me-1 mb-1">{{ amenity }}</span>
+              }
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="text-muted small">From</span>
+                <span class="fs-5 fw-bold text-primary ms-1">${{ hotel.startingPrice }}/night</span>
+              </div>
+              <a [routerLink]="['/hotels', hotel.id]" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

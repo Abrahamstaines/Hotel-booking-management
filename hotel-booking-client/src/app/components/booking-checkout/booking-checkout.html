@@ -1,0 +1,97 @@
+@if (loading) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
+
+@if (!loading && hotel && selectedCategory) {
+  <div class="container py-4">
+    <h2 class="mb-4">Complete Your Booking</h2>
+
+    @if (error) {
+      <div class="alert alert-danger">{{ error }}</div>
+    }
+
+    <div class="row g-4">
+      <!-- Booking Details -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h4>{{ hotel.name }}</h4>
+            <p class="text-muted">
+              <i class="bi bi-geo-alt me-1"></i>{{ hotel.address }}, {{ hotel.city }}
+            </p>
+            <hr>
+            <h5>{{ selectedCategory.name }}</h5>
+            <p class="text-muted">{{ selectedCategory.description }}</p>
+            <p><i class="bi bi-people me-1"></i> Max {{ selectedCategory.maxOccupancy }} guests</p>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5>Stay Dates</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Check-in</label>
+                <input type="date" class="form-control" [(ngModel)]="checkIn" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Check-out</label>
+                <input type="date" class="form-control" [(ngModel)]="checkOut" readonly>
+              </div>
+            </div>
+            <p class="mt-2 text-muted">{{ nights }} night(s)</p>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5>Promotion Code</h5>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="promoCode"
+                     placeholder="Enter promo code (e.g. WELCOME10)">
+              <button class="btn btn-outline-primary" (click)="validatePromo()">Apply</button>
+            </div>
+            @if (promoResult) {
+              <div class="mt-2" [class]="promoResult.isValid ? 'text-success' : 'text-danger'">
+                <small>{{ promoResult.message }}</small>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Price Summary -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+          <div class="card-body">
+            <h5>Price Summary</h5>
+            <hr>
+            <div class="d-flex justify-content-between mb-2">
+              <span>${{ selectedCategory.basePrice }} x {{ nights }} nights</span>
+              <span>${{ subtotal }}</span>
+            </div>
+            @if (promoResult?.isValid) {
+              <div class="d-flex justify-content-between mb-2 text-success">
+                <span>Discount ({{ promoResult!.discountPercent }}%)</span>
+                <span>-${{ discount }}</span>
+              </div>
+            }
+            <hr>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+              <span>Total</span>
+              <span class="text-primary">${{ total }}</span>
+            </div>
+            <button class="btn btn-primary btn-lg w-100 mt-4" (click)="confirmBooking()"
+                    [disabled]="submitting || !checkIn || !checkOut">
+              {{ submitting ? 'Processing...' : 'Confirm Booking' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

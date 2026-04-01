@@ -1,0 +1,109 @@
+@if (loading) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
+
+@if (hotel) {
+  <div class="hotel-hero">
+    <div class="container py-5">
+      <div class="text-white">
+        <h1 class="display-5 fw-bold">{{ hotel.name }}</h1>
+        <p class="lead">
+          <i class="bi bi-geo-alt me-1"></i>{{ hotel.address }}, {{ hotel.city }}
+        </p>
+        <span class="badge bg-warning text-dark fs-6">
+          @for (s of getStars(hotel.starRating); track $index) {
+            <i class="bi bi-star-fill"></i>
+          }
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-4">
+    <div class="row g-4">
+      <!-- Hotel Info -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h4>About This Hotel</h4>
+            <p class="text-muted">{{ hotel.description }}</p>
+
+            <h5 class="mt-4">Amenities</h5>
+            <div class="row g-2">
+              @for (amenity of hotel.amenities; track amenity.name) {
+                <div class="col-auto">
+                  <span class="badge bg-light text-dark p-2 fs-6">
+                    <i class="bi bi-{{ amenity.icon }} me-1"></i>{{ amenity.name }}
+                  </span>
+                </div>
+              }
+            </div>
+
+            <h5 class="mt-4">Contact</h5>
+            <p class="text-muted mb-1">
+              <i class="bi bi-envelope me-2"></i>{{ hotel.contactEmail }}
+            </p>
+            <p class="text-muted">
+              <i class="bi bi-telephone me-2"></i>{{ hotel.contactPhone }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Room Categories -->
+        <h4 class="mb-3">Available Rooms</h4>
+        @for (category of rooms; track category.id) {
+          <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-8">
+                  <h5>{{ category.name }}</h5>
+                  <p class="text-muted mb-2">{{ category.description }}</p>
+                  <p class="mb-1">
+                    <i class="bi bi-people me-1"></i> Max Occupancy: {{ category.maxOccupancy }} guests
+                  </p>
+                  <p class="mb-0">
+                    <span class="badge" [class]="category.availableRooms > 0 ? 'bg-success' : 'bg-danger'">
+                      {{ category.availableRooms > 0 ? category.availableRooms + ' rooms available' : 'No rooms available' }}
+                    </span>
+                  </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                  <p class="fs-4 fw-bold text-primary mb-2">${{ category.basePrice }}/night</p>
+                  <button class="btn btn-primary" (click)="bookRoom(category.id)"
+                          [disabled]="category.availableRooms === 0 || !checkIn || !checkOut">
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+          <div class="card-body">
+            <h5>Check Availability</h5>
+            <div class="mb-3">
+              <label class="form-label">Check-in</label>
+              <input type="date" class="form-control" [(ngModel)]="checkIn">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Check-out</label>
+              <input type="date" class="form-control" [(ngModel)]="checkOut">
+            </div>
+            <button class="btn btn-primary w-100" (click)="checkAvailability()"
+                    [disabled]="!checkIn || !checkOut">
+              Check Availability
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
